@@ -384,7 +384,6 @@ Table.prototype.write = function(width){
         if(style){
             backgroundColor = bgFromStyle(style);
             value = ob.options.ansi.codes(value, style, true);
-            console.log('STY', value)
             if(backgroundColor)
                 line = ob.options.ansi.codes(line, backgroundColor+'_bg', true);
         }
