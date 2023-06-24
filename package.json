@@ -1,0 +1,22 @@
+{
+    "name": "@ansi-art/table",
+    "version": "3.0.0-alpha3",
+    "main": "table.cjs",
+    "module": "table.mjs",
+    "devDependencies": {
+        "chai": "^4.3.7",
+        "environment-safe-chai": "^0.0.1",
+        "mocha": "^10.2.0"
+    },
+    "scripts": {
+        "lint": "./node_modules/.bin/eslint *.mjs src/*.mjs test/*.mjs",
+        "test-require": "./node_modules/.bin/mocha test/test.cjs",
+        "test-import": "./node_modules/.bin/mocha test/test.mjs",
+        "test": "npm run test-require; npm run test-import",
+        "container-test": "docker build . -t ascii-table -f ./containers/test.dockerfile; docker logs --follow \"$(docker run -d ascii-table)\""
+    },
+    "dependencies": {
+        "@ansi-art/color": "^3.0.0-alpha3",
+        "@ansi-art/tools": "^3.0.0-alpha3"
+    }
+}
