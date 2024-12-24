@@ -1,5 +1,5 @@
-import { Color } from '@ansi-art/color/color.mjs';
-import { Ansi } from '@ansi-art/tools/tools.mjs';
+import { Color } from '@ansi-art/color';
+import { Ansi } from '@ansi-art/tools';
 
 function columnStatistics(columns, data, includeColumns){
     var result = {};
@@ -125,7 +125,106 @@ function bgFromStyle(style){
     .map(function(name){
         return name.substring(0, name.length-3);
     })[0];
-    console.log('RES', result, style);
+    return result;
+}
+
+const getBars = (barsType)=>{
+    switch(barsType){
+        case 'single':
+            return {
+                'ul_corner' : '┏',
+                'ur_corner' : '┓',
+                'lr_corner' : '┛',
+                'll_corner' : '┗',
+                'bottom_t' : '┻',
+                'top_t' : '┳',
+                'right_t' : '┫',
+                'left_t' : '┣',
+                'intersection' : '╋',
+                'vertical' : '┃',
+                'horizontal' : '━',
+            };
+            break;
+        case 'double':
+            return {
+                'ul_corner' : '╔',
+                'ur_corner' : '╗',
+                'lr_corner' : '╝',
+                'll_corner' : '╚',
+                'bottom_t' : '╩',
+                'top_t' : '╦',
+                'right_t' : '╣',
+                'left_t' : '╠',
+                'intersection' : '╬',
+                'vertical' : '║',
+                'horizontal' : '═',
+            };
+            break;
+        case 'block':
+            return {
+                'ul_corner' : '█',
+                'ur_corner' : '█',
+                'lr_corner' : '█',
+                'll_corner' : '█',
+                'bottom_t' : '█',
+                'top_t' : '█',
+                'right_t' : '█',
+                'left_t' : '█',
+                'intersection' : '█',
+                'vertical' : '█',
+                'horizontal' : '█',
+            };
+            break;
+        case 'angles':
+            return {
+                'ul_corner' : '◤',
+                'ur_corner' : '◥',
+                'lr_corner' : '◢',
+                'll_corner' : '◣',
+                'bottom_t' : '▲',
+                'top_t' : '▼',
+                'right_t' : '◀',
+                'left_t' : '▶',
+                'intersection' : '◆',
+                'vertical' : ' ',
+                'horizontal' : ' ',
+            };
+            break;
+    }
+}
+
+export class Border{
+    constructor(opts){
+        this.options = (typeof opts === 'string')?{content: opts}:(opts || {});
+        if(this.options.border === true) this.options.border = 'single';
+        if(!this.options.border) this.options.border = 'single';
+        if(typeof this.options.border === 'string'){
+            this.options.border = getBars(this.options.border);
+        }
+    }
+    
+    buildBorder(content){
+        let lines = this.options.content.split('\n');
+        const lineWidth = lines[0].length;
+        const horiz = this.options.border.horizontal;
+        const vert = this.options.border.vertical;
+        const border = this.options.border;
+        lines = lines.map((line)=> vert+line+vert);
+        const horizontalLine = horiz.repeat(lineWidth);
+        return border.ul_corner+horizontalLine+border.ur_corner+'\n'+
+            lines.join('\n')+'\n'+
+            border.ll_corner+horizontalLine+border.lr_corner;
+    }
+    
+    toString(){
+        return this.buildBorder(this.options.content);
+    }
+}
+
+Border.create = (options, callback)=>{
+    const instance = new Border(options);
+    const result = instance.toString();
+    if(callback) callback(result);
     return result;
 }
 
@@ -143,67 +242,8 @@ export const Table = function(options={}){
     var ob = this;
     if(this.options.bars){
         if(this.options.bars === true) this.options.bars = 'single';
-        if(typeof this.options.bars == 'string') switch(this.options.bars){
-            case 'single':
-                this.options.bars = {
-                    'ul_corner' : '┏',
-                    'ur_corner' : '┓',
-                    'lr_corner' : '┛',
-                    'll_corner' : '┗',
-                    'bottom_t' : '┻',
-                    'top_t' : '┳',
-                    'right_t' : '┫',
-                    'left_t' : '┣',
-                    'intersection' : '╋',
-                    'vertical' : '┃',
-                    'horizontal' : '━',
-                };
-                break;
-            case 'double':
-                this.options.bars = {
-                    'ul_corner' : '╔',
-                    'ur_corner' : '╗',
-                    'lr_corner' : '╝',
-                    'll_corner' : '╚',
-                    'bottom_t' : '╩',
-                    'top_t' : '╦',
-                    'right_t' : '╣',
-                    'left_t' : '╠',
-                    'intersection' : '╬',
-                    'vertical' : '║',
-                    'horizontal' : '═',
-                };
-                break;
-            case 'block':
-                this.options.bars = {
-                    'ul_corner' : '█',
-                    'ur_corner' : '█',
-                    'lr_corner' : '█',
-                    'll_corner' : '█',
-                    'bottom_t' : '█',
-                    'top_t' : '█',
-                    'right_t' : '█',
-                    'left_t' : '█',
-                    'intersection' : '█',
-                    'vertical' : '█',
-                    'horizontal' : '█',
-                };
-                break;
-            case 'angles':
-                this.options.bars = {
-                    'ul_corner' : '◤',
-                    'ur_corner' : '◥',
-                    'lr_corner' : '◢',
-                    'll_corner' : '◣',
-                    'bottom_t' : '▲',
-                    'top_t' : '▼',
-                    'right_t' : '◀',
-                    'left_t' : '▶',
-                    'intersection' : '◆',
-                    'vertical' : ' ',
-                    'horizontal' : ' ',
-                };
-                break;
+        if(typeof this.options.bars == 'string'){
+            this.options.bars = getBars(this.options.bars);
         }
         var bars = this.options.bars;
         this.getBoundaryChar = function(t, l, b, r){

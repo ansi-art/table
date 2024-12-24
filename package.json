@@ -1,8 +1,31 @@
 {
     "name": "@ansi-art/table",
     "version": "3.0.0-alpha3",
-    "main": "table.cjs",
+    "main": "table.mjs",
     "module": "table.mjs",
+    "exports": {
+        ".": {
+            "import": "./table.mjs"
+        },
+        "./src/table.mjs": {
+            "import": "./table.mjs"
+        },
+        "./table.mjs": {
+            "import": "./table.mjs"
+        }
+    },
+    "homepage": "https://github.com/ansi-art/table",
+    "description": "An abstraction for rendering ansi and ascii tables, ported from ascii-art-table",
+    "keywords": [],
+    "author": "Abbey Hawk Sparrow <khrome>(http://abbeyhawksparrow.com)",
+    "contributors": [],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ansi-art/table"
+    },
+    "bugs": {
+        "url": "https://api.github.com/repos/ansi-art/table/issues"
+    },
     "devDependencies": {
         "chai": "^4.3.7",
         "environment-safe-chai": "^0.0.1",
@@ -17,6 +40,6 @@
     },
     "dependencies": {
         "@ansi-art/color": "^3.0.0-alpha3",
-        "@ansi-art/tools": "^3.0.0-alpha3"
+        "@ansi-art/tools": "^3.0.0-alpha4"
     }
 }
