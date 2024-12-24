@@ -39,7 +39,27 @@ describe('AsciiArtTable', function(){
                     content,
                     border : 'single'
                 }, function(rendered){
-                    console.log(rendered);
+                    const bordered = 
+`┏━━━━━━━━━━━━━━━━┓
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┃XXXXXXXXXXXXXXXX┃
+┗━━━━━━━━━━━━━━━━┛`;
+                    rendered.should.equal(bordered);
+                    done();
                 });
             });
         });
